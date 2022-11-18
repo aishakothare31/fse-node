@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/MessagesController.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/MessagesController.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+var __importDefault = (this &amp;&amp; this.__importDefault) || function (mod) {
+    return (mod &amp;&amp; mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const MessagesDao_1 = __importDefault(require("../daos/MessagesDao"));
+/**
+ * @class MessagesController Implements RESTful Web service API for Messages resource.
+ * Defines the following HTTP endpoints:
+ * &lt;ul>
+ *     &lt;li>POST /messages/:uid/send :send a new message&lt;/li>
+ *     &lt;li>GET /messages/:uid/sent :retrieve messages sent&lt;/li>
+ *     &lt;li>GET /messages/:uid/received :retrieve messages received by user &lt;/li>
+ *     &lt;li>DELETE /messages/:mid/delete :unsend a particular message&lt;/li>
+ * &lt;/ul>
+ * @property {MessagesDao} messageDao Singleton DAO implementing user CRUD operations
+ * @property {MessagesController} messagesController Singleton controller implementing
+ * RESTful Web service API
+ */
+class MessagesController {
+    constructor() {
+        /**
+         * Sends out a message to a user.
+         * @param {Request} req Represents client request: includes the
+         * request body containing message information.
+         * @param {Response} res Represents response to client, includes the
+         * body formatted as JSON containing the new message that was inserted in the
+         * database
+         */
+        this.send = (req, res) => MessagesController.messagesDao.send(req.body)
+            .then(messages => res.json(messages));
+        /**
+         * Unsends a message already sent to a user.
+         * @param {Request} req Represents client request: includes the
+         * path parameters mid representing message to be unsent.
+         * @param {Response} res Represents response to client, includes status
+         * on whether unsend was successful or not
+         */
+        this.unsend = (req, res) => MessagesController.messagesDao.unsend(req.params.mid)
+            .then(status => res.send(status));
+        /**
+         * Retrieves all messages that are sent by the user
+         * @param {Request} req Represents client request: includes the path
+         * parameter uid representing the user whose messages sent is to be retrieved
+         * @param {Response} res Represents response to client, including the
+         * body formatted as JSON arrays containing the messages objects that are sent by the user
+         */
+        this.findMessagesSent = (req, res) => MessagesController.messagesDao.findMessagesSent(req.params.uid)
+            .then(messages => res.json(messages));
+        /**
+         * Retrieves all messages that are received by the user
+         * @param {Request} req Represents client request: includes the path
+         * parameter uid representing the user whose messages received is to be retrieved
+         * @param {Response} res Represents response to client, including the
+         * body formatted as JSON arrays containing the messages objects that are received by the user
+         */
+        this.findMessagesReceived = (req, res) => MessagesController.messagesDao.findMessagesReceived(req.params.uid)
+            .then(messages => res.json(messages));
+    }
+}
+exports.default = MessagesController;
+MessagesController.messagesDao = MessagesDao_1.default.getInstance();
+MessagesController.messagesController = null;
+MessagesController.getInstance = (app) => {
+    if (MessagesController.messagesController === null) {
+        MessagesController.messagesController = new MessagesController();
+        app.get("/messages/:uid/sent", MessagesController.messagesController.findMessagesSent);
+        app.get("/messages/:uid/received", MessagesController.messagesController.findMessagesReceived);
+        app.post("/messages/:uid/send", MessagesController.messagesController.send);
+        app.delete("/messages/:mid/delete", MessagesController.messagesController.unsend);
+    }
+    return MessagesController.messagesController;
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BookmarksController.html">BookmarksController</a></li><li><a href="BookmarksDao.html">BookmarksDao</a></li><li><a href="FollowsController.html">FollowsController</a></li><li><a href="FollowsDao.html">FollowsDao</a></li><li><a href="LikesController.html">LikesController</a></li><li><a href="LikesDao.html">LikesDao</a></li><li><a href="MessagesController.html">MessagesController</a></li><li><a href="MessagesDao.html">MessagesDao</a></li><li><a href="TuitController.html">TuitController</a></li><li><a href="UserController.html">UserController</a></li><li><a href="UserDao.html">UserDao</a></li></ul><h3>Global</h3><ul><li><a href="global.html#PORT">PORT</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Wed Oct 26 2022 13:11:40 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

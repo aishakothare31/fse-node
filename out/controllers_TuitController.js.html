@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/TuitController.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/TuitController.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * @class TuitController Implements RESTful Web service API for tuits resource.
+ * Defines the following HTTP endpoints:
+ * &lt;ul>
+ *     &lt;li>POST /tuits :create a new tuit instance for
+ *     a given user&lt;/li>
+ *     &lt;li>GET /tuits :retrieve tuits instances&lt;/li>
+ *     &lt;li>GET /tuits/:tid :retrieve specified tuit instances&lt;/li>
+ *     &lt;li>GET /users/:userid/tuits :retrieve tuits for a given user &lt;/li>
+ *     &lt;li>PUT /tuits/:tid :modify individual tuit instance &lt;/li>
+ *     &lt;li>DELETE /tuits/:tid :remove a particular tuit instance&lt;/li>
+ * &lt;/ul>
+ * @property {TuitDao} tuitDao Singleton DAO implementing tuit CRUD operations
+ * @property {TuitController} tuitController Singleton controller implementing
+ * RESTful Web service API
+ */
+class TuitController {
+    constructor(app, tuitDao) {
+        /**
+      * Retrieves all tuits from the database and returns an array of tuits.
+      * @param {Request} req Represents request from client
+      * @param {Response} res Represents client response: body formatted as JSON array
+      * contains the tuit objects.
+      */
+        this.findAllTuits = (_req, res) => this.tuitDao.findAllTuits()
+            .then(tuits => res.json(tuits));
+        /**
+       * Retrieves tuit from the database based on the tuit id match.
+       * @param {Request} req Represents client request: includes path
+       * parameter tid - tuit's primary key for tuit retrival.
+       * @param {Response} res Represents response to client: includes the
+       * body formatted as JSON and the tuit matching the uid.
+       */
+        this.findTuitById = (req, res) => this.tuitDao.findTuitById(req.params.tid)
+            .then(tuit => res.json(tuit));
+        /**
+       * Retrieves tuits for a particular user and returns
+       * array of tuits.
+       * @param {Request} req Represents client request
+       * @param {Response} res Represents response to client: includes the
+       * body formatted as JSON array containing tuit objects.
+       */
+        this.findTuitsByUser = (req, res) => this.tuitDao.findTuitsByUser(req.params.userid)
+            .then((tuits) => res.json(tuits)).then(tuit => res.json(tuit));
+        /**
+         * Inserts a new tuit instance in the tuits collection.
+       * @param {Request} req Represents request from client, including body
+       * containing the JSON object for the new tuit to be inserted in the
+       * database
+       * @param {Response} res Represents response to client, including the
+       * body formatted as JSON containing the new tuit that was inserted in the
+       * database
+       */
+        this.createTuit = (req, res) => this.tuitDao.createTuit(req.body)
+            .then((tuit) => res.json(tuit));
+        /**
+         * Removes tuit from the database.
+         * @param {Request} req Represents request from client, including path
+         * parameter tid identifying the primary key of the tuit to be removed
+         * @param {Response} res Represents response to client, including status
+         * on whether deleting a user was successful or not
+         */
+        this.deleteTuit = (req, res) => this.tuitDao.deleteTuit(req.params.tid)
+            .then(status => res.json(status));
+        /**
+       * Updates tuit with new values in database.
+       * @param {Request} req Represents request from client, including path
+       * parameter tid identifying the primary key of the tuit to be modified
+       * @param {Response} res Represents response to client, including status
+       * on whether updating a tuit was successful or not
+       */
+        this.updateTuit = (req, res) => this.tuitDao.updateTuit(req.params.tid, req.body)
+            .then(status => res.json(status));
+        this.app = app;
+        this.tuitDao = tuitDao;
+        app.get("/tuits", this.findAllTuits);
+        app.get("/users/:userid/tuits", this.findTuitsByUser);
+        app.get("/tuits/:tid", this.findTuitById);
+        app.post("/tuits", this.createTuit);
+        app.put("/tuits/:tid", this.updateTuit);
+        app.delete("/tuits/:tid", this.deleteTuit);
+    }
+}
+exports.default = TuitController;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BookmarksController.html">BookmarksController</a></li><li><a href="BookmarksDao.html">BookmarksDao</a></li><li><a href="FollowsController.html">FollowsController</a></li><li><a href="FollowsDao.html">FollowsDao</a></li><li><a href="LikesController.html">LikesController</a></li><li><a href="LikesDao.html">LikesDao</a></li><li><a href="MessagesController.html">MessagesController</a></li><li><a href="MessagesDao.html">MessagesDao</a></li><li><a href="TuitController.html">TuitController</a></li><li><a href="UserController.html">UserController</a></li><li><a href="UserDao.html">UserDao</a></li></ul><h3>Global</h3><ul><li><a href="global.html#PORT">PORT</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Wed Oct 26 2022 13:11:40 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

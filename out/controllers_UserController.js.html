@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/UserController.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/UserController.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * @class UserController Implements RESTful Web service API for users resource.
+ * HTTP endpoints defined :
+ * &lt;ul>
+ *     &lt;li>POST /users :create a new user instance&lt;/li>
+ *     &lt;li>GET /users :retrieve users instances&lt;/li>
+ *     &lt;li>GET /users/:userid :retrieve individual user instance &lt;/li>
+ *     &lt;li>PUT /users/:userid :modify individual user instance &lt;/li>
+ *     &lt;li>DELETE /users/:userid :remove specified user instance&lt;/li>
+ * &lt;/ul>
+ * @property {UserDao} userDao Singleton DAO implementing user CRUD operations
+ * @property {UserController} userController Singleton controller implementing
+ * RESTful Web service API
+ */
+class UserController {
+    constructor(app, userDao) {
+        /**
+       * Fetches all users from database and returns an array of users.
+       * @param {Request} req Represents client request.
+       * @param {Response} res Represents response to client - includes the
+       * body formatted as JSON arrays containing the user objects.
+       */
+        this.findAllUsers = (req, res) => this.userDao.findAllUsers()
+            .then(users => res.json(users));
+        /**
+       * Fetches the user by their primary key.
+       * @param {Request} req Represents client request: includes path.
+       * parameter uid identifying the primary key of the user to be retrieved
+       * @param {Response} res Represents response to client: includes the
+       * body formatted as JSON and contains user that matched userid.
+       */
+        this.findUserById = (req, res) => this.userDao.findUserById(req.params.userid)
+            .then(user => res.json(user));
+        /**
+        * Creates a new user instance
+        * @param {Request} req Represents client request: includes body
+        * containing JSON object for user to be addded to database.
+        * @param {Response} res Represents response to client: the
+        * body formatted as JSON and contains the new user that got inserted in
+        * database
+        */
+        this.createUser = (req, res) => this.userDao.createUser(req.body)
+            .then(user => res.json(user));
+        /**
+       * Removes a user instance from the database
+       * @param {Request} req Represents client request: includes path
+       * parameter uid - the primary key of the user to be removed.
+       * @param {Response} res Represents response to client: includes status
+       * on whether deletion successful or not.
+       */
+        this.deleteUser = (req, res) => this.userDao.deleteUser(req.params.userid)
+            .then(status => res.json(status));
+        /**
+       * Modifies an existing user instance.
+       * @param {Request} req Represents client request: includes path
+       * parameter uid - primary key of the user to be modified.
+       * @param {Response} res Represents response to client: includes status
+       * on whether update successful or not.
+       */
+        this.updateUser = (req, res) => this.userDao.updateUser(req.params.userid, req.body)
+            .then(status => res.json(status));
+        this.app = app;
+        this.userDao = userDao;
+        this.app.get('/users', this.findAllUsers);
+        this.app.get('/users/:userid', this.findUserById);
+        this.app.post('/users', this.createUser);
+        this.app.delete('/users/:userid', this.deleteUser);
+        this.app.put('/users/:userid', this.updateUser);
+    }
+}
+exports.default = UserController;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="BookmarksController.html">BookmarksController</a></li><li><a href="BookmarksDao.html">BookmarksDao</a></li><li><a href="FollowsController.html">FollowsController</a></li><li><a href="FollowsDao.html">FollowsDao</a></li><li><a href="LikesController.html">LikesController</a></li><li><a href="LikesDao.html">LikesDao</a></li><li><a href="MessagesController.html">MessagesController</a></li><li><a href="MessagesDao.html">MessagesDao</a></li><li><a href="TuitController.html">TuitController</a></li><li><a href="UserController.html">UserController</a></li><li><a href="UserDao.html">UserDao</a></li></ul><h3>Global</h3><ul><li><a href="global.html#PORT">PORT</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Wed Oct 26 2022 13:11:40 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
