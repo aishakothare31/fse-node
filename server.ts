@@ -32,7 +32,8 @@ const app = express();
 const corsOptions ={
     origin:'https://charming-marshmallow-cbf75c.netlify.app', 
     credentials:true,            //access-control-allow-credentials:true
-    optionSuccessStatus:200
+    optionSuccessStatus:200,
+    methods: ["POST","GET","PUT","DELETE"],
 }
 
 // app.use(express.json());
